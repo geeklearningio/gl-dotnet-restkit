@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 namespace GeekLearning.RestKit.Core
 {
     public abstract class ClientBase<TOptions>
-       where TOptions : class, new()
+       where TOptions : class, IProvideRequestFilters, new()
     {
         private IMediaFormatterProvider mediaFormatterProvider;
 
-        public ClientBase(IOptions<TOptions> options, IMediaFormatterProvider mediaFormatterProvider)
+        public ClientBase(IOptions<TOptions> options,
+            IMediaFormatterProvider mediaFormatterProvider)
         {
             this.Options = options.Value;
             this.mediaFormatterProvider = mediaFormatterProvider;
@@ -28,6 +29,17 @@ namespace GeekLearning.RestKit.Core
                 throw new UnsupportedMediaTypeApiException(message.Content.Headers.ContentType);
             }
             return mediaFormatter.TransformAsync<TTarget>(message.Content);
+        }
+
+        protected HttpRequestMessage ApplyFilters(HttpRequestMessage requestMessage, params string[] securityDefinitions)
+        {
+            HttpRequestMessage finalMessage = requestMessage;
+            foreach (var filter in this.Options.RequestFilters)
+            {
+                finalMessage = filter.Apply(requestMessage, securityDefinitions) ?? finalMessage;
+            }
+
+            return finalMessage;
         }
 
         protected HttpContent TransformRequestBody(object data, string mediaType)
