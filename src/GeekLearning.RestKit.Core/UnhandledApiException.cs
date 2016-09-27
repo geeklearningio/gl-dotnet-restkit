@@ -8,9 +8,12 @@ namespace GeekLearning.RestKit.Core
 {
     public class UnhandledApiException : ApiException
     {
-        public UnhandledApiException(HttpResponseMessage message)
-        {
 
+        public UnhandledApiException(HttpResponseMessage response)
+        {
+            this.Response = response;
         }
+
+        public HttpResponseMessage Response { get; private set; }
     }
 }
