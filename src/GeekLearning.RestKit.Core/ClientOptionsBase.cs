@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GeekLearning.RestKit.Core
+﻿namespace GeekLearning.RestKit.Core
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public abstract class ClientOptionsBase : IProvideRequestFilters
     {
-        private List<IRequestFilter> requestfilters = new List<IRequestFilter>();
+        private List<InjectionDescriptor> requestfilters = new List<InjectionDescriptor>();
 
-        public void AddFilter(IRequestFilter filter)
+        public void AddFilter<TRequestFilter>(params object[] arguments)
+            where TRequestFilter: IRequestFilter
         {
-            this.requestfilters.Add(filter);
+            this.requestfilters.Add(new InjectionDescriptor {
+                Type = typeof(TRequestFilter),
+                Arguments = arguments
+            });
         }
 
-        public IEnumerable<IRequestFilter> RequestFilters
+        public IEnumerable<InjectionDescriptor> RequestFilters
         {
             get
             {

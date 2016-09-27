@@ -7,6 +7,6 @@ namespace GeekLearning.RestKit.Core
 {
     public interface IProvideRequestFilters
     {
-        IEnumerable<IRequestFilter> RequestFilters { get; }
+        IEnumerable<InjectionDescriptor> RequestFilters { get; }
     }
 }
