@@ -1,21 +1,32 @@
-﻿using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GeekLearning.RestKit.Core
+﻿namespace GeekLearning.RestKit.Core
 {
+    using Microsoft.Extensions.Options;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Http;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
+
     public abstract class ClientBase<TOptions>
-       where TOptions : class, new()
+       where TOptions : class, IProvideRequestFilters, new()
     {
         private IMediaFormatterProvider mediaFormatterProvider;
+        private IServiceProvider serviceProvider;
+        private Lazy<IRequestFilter[]> requestFilters;
 
-        public ClientBase(IOptions<TOptions> options, IMediaFormatterProvider mediaFormatterProvider)
+        public ClientBase(IOptions<TOptions> options,
+            IMediaFormatterProvider mediaFormatterProvider,
+            IServiceProvider serviceProvider)
         {
             this.Options = options.Value;
             this.mediaFormatterProvider = mediaFormatterProvider;
+            this.serviceProvider = serviceProvider;
+            this.requestFilters = new Lazy<IRequestFilter[]>(() =>
+                this.Options.RequestFilters.Select(x=> ActivatorUtilities.CreateInstance(this.serviceProvider, x.Type, x.Arguments)).Cast<IRequestFilter>().ToArray()
+            );
         }
 
         protected TOptions Options { get; private set; }
@@ -28,6 +39,17 @@ namespace GeekLearning.RestKit.Core
                 throw new UnsupportedMediaTypeApiException(message.Content.Headers.ContentType);
             }
             return mediaFormatter.TransformAsync<TTarget>(message.Content);
+        }
+
+        protected HttpRequestMessage ApplyFilters(HttpRequestMessage requestMessage, params string[] securityDefinitions)
+        {
+            HttpRequestMessage finalMessage = requestMessage;
+            foreach (var filter in this.requestFilters.Value)
+            {
+                finalMessage = filter.Apply(requestMessage, securityDefinitions) ?? finalMessage;
+            }
+
+            return finalMessage;
         }
 
         protected HttpContent TransformRequestBody(object data, string mediaType)
