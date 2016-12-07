@@ -16,17 +16,24 @@
         private IMediaFormatterProvider mediaFormatterProvider;
         private IServiceProvider serviceProvider;
         private Lazy<IRequestFilter[]> requestFilters;
+        private IHttpClientFactory httpClientFactory;
 
         public ClientBase(IOptions<TOptions> options,
+            IHttpClientFactory httpClientFactory,
             IMediaFormatterProvider mediaFormatterProvider,
             IServiceProvider serviceProvider)
         {
             this.Options = options.Value;
             this.mediaFormatterProvider = mediaFormatterProvider;
             this.serviceProvider = serviceProvider;
+            this.httpClientFactory = httpClientFactory; 
             this.requestFilters = new Lazy<IRequestFilter[]>(() =>
                 this.Options.RequestFilters.Select(x=> ActivatorUtilities.CreateInstance(this.serviceProvider, x.Type, x.Arguments)).Cast<IRequestFilter>().ToArray()
             );
+        }
+
+        protected HttpClient GetClient(){
+            return this.httpClientFactory.CreateClient();
         }
 
         protected TOptions Options { get; private set; }
