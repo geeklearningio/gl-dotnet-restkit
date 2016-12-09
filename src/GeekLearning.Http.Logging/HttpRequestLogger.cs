@@ -14,7 +14,7 @@ namespace GeekLearning.Http.Logging
         private ILogger logger;
         TimebasedId timebaseId;
 
-        protected HttpRequestLogger(HttpMessageHandler innerHandler, ILogger logger) : base(innerHandler)
+        public HttpRequestLogger(HttpMessageHandler innerHandler, ILogger logger) : base(innerHandler)
         {
             this.timebaseId = new TimebasedId(false);
             this.logger = logger;
@@ -52,7 +52,7 @@ namespace GeekLearning.Http.Logging
     public class HttpRequestLogger<TInnerHandler> : HttpRequestLogger
         where TInnerHandler : HttpMessageHandler, new()
     {
-        protected HttpRequestLogger(ILogger logger) : base(new TInnerHandler(), logger)
+        public HttpRequestLogger(ILogger logger) : base(new TInnerHandler(), logger)
         {
         }
     }
