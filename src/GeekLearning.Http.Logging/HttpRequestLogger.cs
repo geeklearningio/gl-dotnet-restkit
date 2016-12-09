@@ -24,15 +24,27 @@ namespace GeekLearning.Http.Logging
         {
             var correlationId = timebaseId.NewId();
 
-            await request.Content.LoadIntoBufferAsync();
-            var requestBody = request.Content.ReadAsStringAsync();
-            this.logger.LogInformation(
-                "`{0}` to `{1}` with correlationId `{2}`:\n{3}\n\n{4}",
-                request.Method,
-                request.RequestUri,
-                correlationId,
-                string.Join("\n", request.Headers.Select(h => $"{h.Key}: {h.Value}")),
-                requestBody);
+            if (request.Content != null)
+            {
+                await request.Content.LoadIntoBufferAsync();
+                var requestBody = request.Content.ReadAsStringAsync();
+                this.logger.LogInformation(
+                    "`{0}` to `{1}` with correlationId `{2}`:\n{3}\n\n{4}",
+                    request.Method,
+                    request.RequestUri,
+                    correlationId,
+                    string.Join("\n", request.Headers.Select(h => $"{h.Key}: {h.Value}")),
+                    requestBody);
+            }
+            else
+            {
+                this.logger.LogInformation(
+                   "`{0}` to `{1}` with correlationId `{2}`:\n{3}",
+                   request.Method,
+                   request.RequestUri,
+                   correlationId,
+                   string.Join("\n", request.Headers.Select(h => $"{h.Key}: {h.Value}")));
+            }
 
             var response = await base.SendAsync(request, cancellationToken);
             await response.Content.LoadIntoBufferAsync();
