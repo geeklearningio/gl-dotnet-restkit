@@ -24,6 +24,7 @@ namespace GeekLearning.Http.Logging
         {
             var correlationId = timebaseId.NewId();
 
+            await request.Content.LoadIntoBufferAsync();
             var requestBody = request.Content.ReadAsStringAsync();
             this.logger.LogInformation(
                 "`{0}` to `{1}` with correlationId `{2}`:\n{3}\n\n{4}",
@@ -34,6 +35,7 @@ namespace GeekLearning.Http.Logging
                 requestBody);
 
             var response = await base.SendAsync(request, cancellationToken);
+            await response.Content.LoadIntoBufferAsync();
             var responseBody = response.Content.ReadAsStringAsync();
 
             this.logger.LogInformation(
