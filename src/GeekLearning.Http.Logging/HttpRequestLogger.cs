@@ -56,7 +56,7 @@ namespace GeekLearning.Http.Logging
                response.ReasonPhrase,
                correlationId,
                string.Join("\n", response.Headers.Select(h => $"{h.Key}: {h.Value}")),
-               requestBody);
+               responseBody);
 
             return response;
         }
