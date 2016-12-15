@@ -33,7 +33,7 @@ namespace GeekLearning.Http.Logging
                     request.Method,
                     request.RequestUri,
                     correlationId,
-                    string.Join("\n", request.Headers.Select(h => $"{h.Key}: {h.Value}")),
+                    string.Join("\n", request.Headers.Select(h => $"{h.Key}: {string.Join(" ", h.Value)}")),
                     requestBody);
             }
             else
@@ -43,7 +43,7 @@ namespace GeekLearning.Http.Logging
                    request.Method,
                    request.RequestUri,
                    correlationId,
-                   string.Join("\n", request.Headers.Select(h => $"{h.Key}: {h.Value}")));
+                   string.Join("\n", request.Headers.Select(h => $"{h.Key}: {string.Join(" ", h.Value)}")));
             }
 
             var response = await base.SendAsync(request, cancellationToken);
@@ -55,7 +55,7 @@ namespace GeekLearning.Http.Logging
                response.StatusCode,
                response.ReasonPhrase,
                correlationId,
-               string.Join("\n", response.Headers.Select(h => $"{h.Key}: {h.Value}")),
+               string.Join("\n", response.Headers.Select(h => $"{h.Key}: {string.Join(" ", h.Value)}")),
                responseBody);
 
             return response;
