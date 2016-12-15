@@ -52,7 +52,7 @@ namespace GeekLearning.Http.Logging
 
             this.logger.LogInformation(
                "`RECEIVE` `{0}` `{1}` with correlationId `{2}`:\n{3}\n\n{4}",
-               response.StatusCode,
+               (int)response.StatusCode,
                response.ReasonPhrase,
                correlationId,
                string.Join("\n", response.Headers.Select(h => $"{h.Key}: {string.Join(" ", h.Value)}")),
