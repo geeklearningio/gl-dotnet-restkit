@@ -27,7 +27,7 @@ namespace GeekLearning.Http.Logging
             if (request.Content != null)
             {
                 await request.Content.LoadIntoBufferAsync();
-                var requestBody = request.Content.ReadAsStringAsync();
+                var requestBody = await request.Content.ReadAsStringAsync();
                 this.logger.LogInformation(
                     "`{0}` to `{1}` with correlationId `{2}`:\n{3}\n\n{4}",
                     request.Method,
@@ -48,7 +48,7 @@ namespace GeekLearning.Http.Logging
 
             var response = await base.SendAsync(request, cancellationToken);
             await response.Content.LoadIntoBufferAsync();
-            var responseBody = response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
 
             this.logger.LogInformation(
                "`RECEIVE` `{0}` `{1}` with correlationId `{2}`:\n{3}\n\n{4}",
