@@ -6,18 +6,25 @@ using System.Net.Http;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using GeekLearning.D64;
+using System.Diagnostics;
 
 namespace GeekLearning.Http.Logging
 {
     public class HttpRequestLogger : DelegatingHandler
     {
         private ILogger logger;
+        private HttpRequestLoggerOptions options;
         TimebasedId timebaseId;
 
-        public HttpRequestLogger(HttpMessageHandler innerHandler, ILogger logger) : base(innerHandler)
+        public HttpRequestLogger(HttpMessageHandler innerHandler, ILogger logger) : this(innerHandler, logger, new HttpRequestLoggerOptions())
+        {
+        }
+
+        public HttpRequestLogger(HttpMessageHandler innerHandler, ILogger logger, HttpRequestLoggerOptions options) : base(innerHandler)
         {
             this.timebaseId = new TimebasedId(false);
             this.logger = logger;
+            this.options = options;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -45,10 +52,25 @@ namespace GeekLearning.Http.Logging
                    correlationId,
                    string.Join("\n", request.Headers.Select(h => $"{h.Key}: {string.Join(" ", h.Value)}")));
             }
-
+            Stopwatch stopwatch = null;
+            if (this.options.MeasureRequestTime)
+            {
+                stopwatch = new Stopwatch();
+                stopwatch.Start();
+            }
             var response = await base.SendAsync(request, cancellationToken);
             await response.Content.LoadIntoBufferAsync();
             var responseBody = await response.Content.ReadAsStringAsync();
+
+            if (stopwatch != null)
+            {
+                stopwatch.Stop();
+                this.logger.LogInformation(
+                    "`REQUEST` `{0}` ran for `{1}` ms",
+                    correlationId,
+                    stopwatch.Elapsed.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                );
+            }
 
             this.logger.LogInformation(
                "`RECEIVE` `{0}` `{1}` with correlationId `{2}`:\n{3}\n\n{4}",
