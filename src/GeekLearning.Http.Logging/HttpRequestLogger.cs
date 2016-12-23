@@ -41,7 +41,7 @@ namespace GeekLearning.Http.Logging
                     request.RequestUri,
                     correlationId,
                     string.Join("\n", request.Headers.Select(h => $"{h.Key}: {string.Join(" ", h.Value)}")),
-                    requestBody);
+                    TruncateMessageIfTooBig(requestBody));
             }
             else
             {
@@ -78,9 +78,21 @@ namespace GeekLearning.Http.Logging
                response.ReasonPhrase,
                correlationId,
                string.Join("\n", response.Headers.Select(h => $"{h.Key}: {string.Join(" ", h.Value)}")),
-               responseBody);
+              TruncateMessageIfTooBig(responseBody));
 
             return response;
+        }
+
+        private string TruncateMessageIfTooBig(string body)
+        {
+            if (body.Length > options.MaxSize)
+            {
+                return body.Substring(0, options.MaxSize / 2) + "<< TRUNCATED IN LOGS >>" + body.Substring(body.Length - options.MaxSize / 2);
+            }
+            else
+            {
+                return body;
+            }
         }
 
     }

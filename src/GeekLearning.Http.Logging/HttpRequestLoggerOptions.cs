@@ -18,5 +18,7 @@ namespace GeekLearning.Http.Logging
         }
 
         public bool MeasureRequestTime { get; set; }
+
+        public int MaxSize { get; set; } = 512000;
     }
 }
