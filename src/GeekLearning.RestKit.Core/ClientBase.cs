@@ -26,13 +26,14 @@
             this.Options = options.Value;
             this.mediaFormatterProvider = mediaFormatterProvider;
             this.serviceProvider = serviceProvider;
-            this.httpClientFactory = httpClientFactory; 
+            this.httpClientFactory = httpClientFactory;
             this.requestFilters = new Lazy<IRequestFilter[]>(() =>
-                this.Options.RequestFilters.Select(x=> ActivatorUtilities.CreateInstance(this.serviceProvider, x.Type, x.Arguments)).Cast<IRequestFilter>().ToArray()
+                this.Options.RequestFilters.Select(x => ActivatorUtilities.CreateInstance(this.serviceProvider, x.Type, x.Arguments)).Cast<IRequestFilter>().ToArray()
             );
         }
 
-        protected HttpClient GetClient(){
+        protected HttpClient GetClient()
+        {
             return this.httpClientFactory.CreateClient();
         }
 
@@ -43,7 +44,7 @@
             IMediaFormatter mediaFormatter = this.mediaFormatterProvider.GetMediaFormatter(message.Content.Headers.ContentType);
             if (mediaFormatter == null)
             {
-                throw new UnsupportedMediaTypeApiException(message.Content.Headers.ContentType);
+                throw new UnsupportedMediaTypeApiException(message);
             }
             return mediaFormatter.TransformAsync<TTarget>(message.Content);
         }
@@ -59,14 +60,14 @@
             return finalMessage;
         }
 
-        protected HttpContent TransformRequestBody(object data, string mediaType)
+        protected HttpContent TransformRequestBody(object body, IDictionary<string, IFormData> formData, string mediaType)
         {
             IMediaFormatter mediaFormatter = this.mediaFormatterProvider.GetMediaFormatter(mediaType);
             if (mediaFormatter == null)
             {
                 throw new UnsupportedMediaTypeApiException(mediaType);
             }
-            return mediaFormatter.Format(data);
+            return mediaFormatter.Format(body, formData);
         }
 
         /// <summary>

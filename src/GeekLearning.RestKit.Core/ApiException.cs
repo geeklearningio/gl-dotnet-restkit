@@ -11,5 +11,12 @@ namespace GeekLearning.RestKit.Core
         public ApiException()
         {
         }
+
+        public ApiException(HttpResponseMessage response)
+        {
+            this.Response = response;
+        }
+
+        public HttpResponseMessage Response { get; protected set; }
     }
 }

@@ -9,7 +9,7 @@ namespace GeekLearning.RestKit.Core
     public interface IMediaFormatter
     {
         Task<TTarget> TransformAsync<TTarget>(HttpContent content);
-        HttpContent Format(object data);
-        bool Supports(string contentType);
+        HttpContent Format(object body, IDictionary<string, IFormData> formData);
+        bool Supports(ParsedMediaType mediaType);
     }
 }
