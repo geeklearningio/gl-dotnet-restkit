@@ -70,6 +70,16 @@
             return mediaFormatter.Format(body, formData);
         }
 
+
+        protected IFormData GetFormData(IFormData data)
+        {
+            return data;
+        }
+        protected IFormData GetFormData(object data)
+        {
+            return new FormData(data);
+        }
+
         /// <summary>
         /// Append the given query keys and values to the uri.
         /// </summary>
