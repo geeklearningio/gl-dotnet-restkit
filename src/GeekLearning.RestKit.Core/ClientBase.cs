@@ -70,6 +70,71 @@
             return mediaFormatter.Format(body, formData);
         }
 
+        protected void OnFailure(HttpResponseMessage message)
+        {
+            switch (message.StatusCode)
+            {
+                case HttpStatusCode.BadRequest:
+                    throw new BadRequestApiException(message);
+                case HttpStatusCode.Unauthorized:
+                    throw new UnauthorizedApiException(message);
+                case HttpStatusCode.Forbidden:
+                    throw new ForbiddenApiException(message);
+                case HttpStatusCode.NotFound:
+                    throw new NotFoundApiException(message);
+                case HttpStatusCode.Conflict:
+                    throw new ConflictApiException(message);
+                case HttpStatusCode.InternalServerError:
+                    throw new InternalServerErrorApiException(message);
+                case HttpStatusCode.ServiceUnavailable:
+                    throw new ServiceUnavailableApiException(message);
+                default:
+                    throw new UnhandledApiException(message);
+            }
+        }
+
+        protected async Task OnFailure<TTarget>(HttpResponseMessage message)
+        {
+            if (message.Content == null)
+            {
+                this.OnFailure(message);
+            }
+            else
+            {
+                var result = await this.TransformResponseAsync<TTarget>(message);
+
+                switch (message.StatusCode)
+                {
+                    case HttpStatusCode.BadRequest:
+                        throw new BadRequestApiException<TTarget>(message, result);
+                    case HttpStatusCode.Unauthorized:
+                        throw new UnauthorizedApiException<TTarget>(message, result);
+                    case HttpStatusCode.Forbidden:
+                        throw new ForbiddenApiException<TTarget>(message, result);
+                    case HttpStatusCode.NotFound:
+                        throw new NotFoundApiException<TTarget>(message, result);
+                    case HttpStatusCode.Conflict:
+                        throw new ConflictApiException<TTarget>(message, result);
+                    case HttpStatusCode.InternalServerError:
+                        throw new ConflictApiException<TTarget>(message, result);
+                    case HttpStatusCode.ServiceUnavailable:
+                        throw new ServiceUnavailableApiException<TTarget>(message, result);
+                    default:
+                        throw new UnhandledApiException<TTarget>(message, result);
+                }
+            }
+        }
+
+        protected bool MatchStatus(HttpResponseMessage message, int status)
+        {
+            return status == (int)message.StatusCode;
+        }
+
+        protected bool MatchStatus(HttpResponseMessage message, string status)
+        {
+            return message.StatusCode.ToString().Equals(status, StringComparison.OrdinalIgnoreCase)
+                || message.ReasonPhrase == status;
+        }
 
         protected IFormData GetFormData(IFormData data)
         {

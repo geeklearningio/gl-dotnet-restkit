@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GeekLearning.RestKit.Core
+﻿namespace GeekLearning.RestKit.Core
 {
-    public abstract class ApiException<TResponse>: ApiException
-    {
-        public ApiException()
-        {
-        }
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
 
+    public class ApiException<TResponse>: ApiException, IApiException<TResponse>
+    {
+        public ApiException(HttpResponseMessage response, TResponse data) : base(response)
+        {
+            this.Response = data;
+        }
+             
+        public TResponse Response { get; }
     }
 }

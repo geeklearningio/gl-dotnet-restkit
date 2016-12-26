@@ -1,15 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GeekLearning.RestKit.Core
+﻿namespace GeekLearning.RestKit.Core
 {
-    public class ConflictApiException: ApiException
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+
+    public class ConflictApiException : ApiException
     {
+        public ConflictApiException()
+        {
+        }
+
+        public ConflictApiException(HttpResponseMessage message) : base(message)
+        {
+        }
     }
 
-    public class ConflictApiException<TResponse> : ApiException<TResponse>
+    public class ConflictApiException<TResponse> : BadRequestApiException, IApiException<TResponse>
     {
+        public ConflictApiException(HttpResponseMessage message, TResponse response) : base(message)
+        {
+            this.Response = response;
+        }
+
+        public TResponse Response { get; }
     }
 }
