@@ -70,34 +70,34 @@
             return mediaFormatter.Format(body, formData);
         }
 
-        protected void OnFailure(HttpResponseMessage message)
+        protected ApiException MapToException(HttpResponseMessage message)
         {
             switch (message.StatusCode)
             {
                 case HttpStatusCode.BadRequest:
-                    throw new BadRequestApiException(message);
+                    return new BadRequestApiException(message);
                 case HttpStatusCode.Unauthorized:
-                    throw new UnauthorizedApiException(message);
+                    return new UnauthorizedApiException(message);
                 case HttpStatusCode.Forbidden:
-                    throw new ForbiddenApiException(message);
+                    return new ForbiddenApiException(message);
                 case HttpStatusCode.NotFound:
-                    throw new NotFoundApiException(message);
+                    return new NotFoundApiException(message);
                 case HttpStatusCode.Conflict:
-                    throw new ConflictApiException(message);
+                    return new ConflictApiException(message);
                 case HttpStatusCode.InternalServerError:
-                    throw new InternalServerErrorApiException(message);
+                    return new InternalServerErrorApiException(message);
                 case HttpStatusCode.ServiceUnavailable:
-                    throw new ServiceUnavailableApiException(message);
+                    return new ServiceUnavailableApiException(message);
                 default:
-                    throw new UnhandledApiException(message);
+                    return new UnhandledApiException(message);
             }
         }
 
-        protected async Task OnFailure<TTarget>(HttpResponseMessage message)
+        protected async Task<ApiException> MapToException<TTarget>(HttpResponseMessage message)
         {
             if (message.Content == null)
             {
-                this.OnFailure(message);
+                return this.MapToException(message);
             }
             else
             {
@@ -106,21 +106,21 @@
                 switch (message.StatusCode)
                 {
                     case HttpStatusCode.BadRequest:
-                        throw new BadRequestApiException<TTarget>(message, result);
+                        return new BadRequestApiException<TTarget>(message, result);
                     case HttpStatusCode.Unauthorized:
-                        throw new UnauthorizedApiException<TTarget>(message, result);
+                        return new UnauthorizedApiException<TTarget>(message, result);
                     case HttpStatusCode.Forbidden:
-                        throw new ForbiddenApiException<TTarget>(message, result);
+                        return new ForbiddenApiException<TTarget>(message, result);
                     case HttpStatusCode.NotFound:
-                        throw new NotFoundApiException<TTarget>(message, result);
+                        return new NotFoundApiException<TTarget>(message, result);
                     case HttpStatusCode.Conflict:
-                        throw new ConflictApiException<TTarget>(message, result);
+                        return new ConflictApiException<TTarget>(message, result);
                     case HttpStatusCode.InternalServerError:
-                        throw new ConflictApiException<TTarget>(message, result);
+                        return new ConflictApiException<TTarget>(message, result);
                     case HttpStatusCode.ServiceUnavailable:
-                        throw new ServiceUnavailableApiException<TTarget>(message, result);
+                        return new ServiceUnavailableApiException<TTarget>(message, result);
                     default:
-                        throw new UnhandledApiException<TTarget>(message, result);
+                        return new UnhandledApiException<TTarget>(message, result);
                 }
             }
         }
