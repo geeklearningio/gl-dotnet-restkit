@@ -4,8 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Polly;
 
-    public abstract class ClientOptionsBase : IProvideRequestFilters
+    public abstract class ClientOptionsBase : IProvideRequestFilters, IProvideErrorHandlingPolicy
     {
         private List<InjectionDescriptor> requestfilters = new List<InjectionDescriptor>();
 
@@ -25,5 +26,7 @@
                 return requestfilters;
             }
         }
+
+        public Policy Policy { get; set; }
     }
 }

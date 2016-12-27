@@ -3,13 +3,16 @@
 
   "dependencies": {
     "Microsoft.Extensions.Options": "1.0.0",
-    "NETStandard.Library": "1.6.0"
+    "NETStandard.Library": "1.6.0",
+    "Polly": "5.0.2-*"
   },
 
   "frameworks": {
-    "net452": {},
+    "net452": {
+      "dependencies": {
+      }
+    },
     "netstandard1.3": {
-      "imports": "dnxcore50"
     }
   }
 }

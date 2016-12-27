@@ -11,7 +11,7 @@
     using Microsoft.Extensions.DependencyInjection;
 
     public abstract class ClientBase<TOptions>
-       where TOptions : class, IProvideRequestFilters, new()
+       where TOptions : class, IProvideRequestFilters, IProvideErrorHandlingPolicy, new()
     {
         private IMediaFormatterProvider mediaFormatterProvider;
         private IServiceProvider serviceProvider;
