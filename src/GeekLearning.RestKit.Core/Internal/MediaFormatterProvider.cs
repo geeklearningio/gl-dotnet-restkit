@@ -27,7 +27,7 @@ namespace GeekLearning.RestKit.Core.Internal
 
         public IMediaFormatter GetMediaFormatter(ParsedMediaType mediaType)
         {
-            return mediaFormatters.First(f => f.Supports(mediaType));
+            return mediaFormatters.FirstOrDefault(f => f.Supports(mediaType));
         }
     }
 }
