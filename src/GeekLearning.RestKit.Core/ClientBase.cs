@@ -41,12 +41,19 @@
 
         protected Task<TTarget> TransformResponseAsync<TTarget>(HttpResponseMessage message)
         {
-            IMediaFormatter mediaFormatter = this.mediaFormatterProvider.GetMediaFormatter(message.Content.Headers.ContentType);
-            if (mediaFormatter == null)
+            if (message.Content != null)
             {
-                throw new UnsupportedMediaTypeApiException(message);
+                IMediaFormatter mediaFormatter = this.mediaFormatterProvider.GetMediaFormatter(message.Content.Headers.ContentType);
+                if (mediaFormatter == null)
+                {
+                    throw new UnsupportedMediaTypeApiException(message);
+                }
+                return mediaFormatter.TransformAsync<TTarget>(message.Content);
             }
-            return mediaFormatter.TransformAsync<TTarget>(message.Content);
+            else
+            {
+                return Task.FromResult(default(TTarget));
+            }
         }
 
         protected HttpRequestMessage ApplyFilters(HttpRequestMessage requestMessage, params string[] securityDefinitions)
