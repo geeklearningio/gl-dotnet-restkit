@@ -41,7 +41,7 @@
 
         protected Task<TTarget> TransformResponseAsync<TTarget>(HttpResponseMessage message)
         {
-            if (message.Content != null)
+            if (message.Content != null && message.Content.Headers.ContentLength > 0)
             {
                 IMediaFormatter mediaFormatter = this.mediaFormatterProvider.GetMediaFormatter(message.Content.Headers.ContentType);
                 if (mediaFormatter == null)
