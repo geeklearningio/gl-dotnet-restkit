@@ -18,7 +18,7 @@
         }
     }
 
-    public class UnauthorizedApiException<TResponse> : BadRequestApiException, IApiException<TResponse>
+    public class UnauthorizedApiException<TResponse> : UnauthorizedApiException, IApiException<TResponse>
     {
         public UnauthorizedApiException(HttpResponseMessage message, TResponse response) : base(message)
         {

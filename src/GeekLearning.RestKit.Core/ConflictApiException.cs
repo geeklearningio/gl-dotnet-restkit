@@ -17,7 +17,7 @@
         }
     }
 
-    public class ConflictApiException<TResponse> : BadRequestApiException, IApiException<TResponse>
+    public class ConflictApiException<TResponse> : ConflictApiException, IApiException<TResponse>
     {
         public ConflictApiException(HttpResponseMessage message, TResponse response) : base(message)
         {

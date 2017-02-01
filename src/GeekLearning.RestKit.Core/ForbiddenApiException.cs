@@ -17,7 +17,7 @@
         }
     }
 
-    public class ForbiddenApiException<TResponse> : BadRequestApiException, IApiException<TResponse>
+    public class ForbiddenApiException<TResponse> : ForbiddenApiException, IApiException<TResponse>
     {
         public ForbiddenApiException(HttpResponseMessage message, TResponse response) : base(message)
         {

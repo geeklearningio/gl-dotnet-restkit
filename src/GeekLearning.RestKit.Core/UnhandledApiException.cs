@@ -18,7 +18,7 @@
         }
     }
 
-    public class UnhandledApiException<TResponse> : BadRequestApiException, IApiException<TResponse>
+    public class UnhandledApiException<TResponse> : UnhandledApiException, IApiException<TResponse>
     {
         public UnhandledApiException(HttpResponseMessage message, TResponse response) : base(message)
         {

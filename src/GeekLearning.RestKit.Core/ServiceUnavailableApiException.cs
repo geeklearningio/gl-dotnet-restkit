@@ -17,7 +17,7 @@
         }
     }
 
-    public class ServiceUnavailableApiException<TResponse> : BadRequestApiException, IApiException<TResponse>
+    public class ServiceUnavailableApiException<TResponse> : ServiceUnavailableApiException, IApiException<TResponse>
     {
         public ServiceUnavailableApiException(HttpResponseMessage message, TResponse response) : base(message)
         {

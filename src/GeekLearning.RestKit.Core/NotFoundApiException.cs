@@ -18,7 +18,7 @@
         }
     }
 
-    public class NotFoundApiException<TResponse> : BadRequestApiException, IApiException<TResponse>
+    public class NotFoundApiException<TResponse> : NotFoundApiException, IApiException<TResponse>
     {
         public NotFoundApiException(HttpResponseMessage message, TResponse response) : base(message)
         {

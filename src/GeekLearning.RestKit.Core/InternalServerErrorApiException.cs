@@ -17,7 +17,7 @@
         }
     }
 
-    public class InternalServerErrorApiException<TResponse> : BadRequestApiException, IApiException<TResponse>
+    public class InternalServerErrorApiException<TResponse> : InternalServerErrorApiException, IApiException<TResponse>
     {
         public InternalServerErrorApiException(HttpResponseMessage message, TResponse response) : base(message)
         {
