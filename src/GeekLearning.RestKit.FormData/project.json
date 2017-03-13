@@ -8,7 +8,7 @@
 
   "frameworks": {
     "net452": {},
-    "netstandard1.6": {
+    "netstandard1.3": {
       "imports": "dnxcore50"
     }
   }
