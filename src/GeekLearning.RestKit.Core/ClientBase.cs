@@ -143,12 +143,13 @@
                 || message.ReasonPhrase == status;
         }
 
-        protected IFormData GetFormData(IFormData data)
-        {
-            return data;
-        }
         protected IFormData GetFormData(object data)
         {
+            var formData = data as IFormData;
+            if (formData != null)
+            {
+                return formData;
+            }
             return new FormData(data);
         }
 
