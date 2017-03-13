@@ -19,7 +19,7 @@
             var containerContent = new MultipartFormDataContent();
             foreach (var item in formData)
             {
-                var file = formData as IFile;
+                var file = item.Value as IFile;
 
                 if (file != null)
                 {
