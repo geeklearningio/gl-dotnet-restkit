@@ -153,6 +153,15 @@
             return new FormData(data);
         }
 
+        protected string SafeToString(object value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+            return value.ToString();
+        }
+
         /// <summary>
         /// Append the given query keys and values to the uri.
         /// </summary>
