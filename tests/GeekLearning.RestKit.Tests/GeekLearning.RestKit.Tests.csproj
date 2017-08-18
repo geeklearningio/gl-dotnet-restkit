@@ -4,6 +4,7 @@
     <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
     <AssemblyName>GeekLearning.RestKit.Tests</AssemblyName>
     <PackageId>GeekLearning.RestKit.Tests</PackageId>
+    <Authors>Geek Learning;Cyprien Autexier</Authors>
   </PropertyGroup>
 
   <ItemGroup>
