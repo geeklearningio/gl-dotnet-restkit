@@ -4,9 +4,6 @@
     <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
     <AssemblyName>GeekLearning.RestKit.Tests</AssemblyName>
     <PackageId>GeekLearning.RestKit.Tests</PackageId>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
 
   <ItemGroup>
