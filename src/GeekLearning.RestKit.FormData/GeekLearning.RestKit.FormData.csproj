@@ -4,6 +4,9 @@
     <TargetFrameworks>net452;netstandard1.3</TargetFrameworks>
     <AssemblyName>GeekLearning.RestKit.FormData</AssemblyName>
     <PackageId>GeekLearning.RestKit.FormData</PackageId>
+    <Authors>Geek Learning;Cyprien Autexier</Authors>
+    <Description>Toolkit to generate .Net rest clients with Jane. FormData support library</Description>
+    <VersionPrefix>0.0.1</VersionPrefix>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
   </PropertyGroup>
 
@@ -14,6 +17,10 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>
