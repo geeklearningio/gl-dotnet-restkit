@@ -11,34 +11,49 @@
     using Microsoft.Extensions.DependencyInjection;
 
     public abstract class ClientBase<TOptions>
-       where TOptions : class, IProvideRequestFilters, new()
+       where TOptions : class, IProvideRequestFilters, IProvideErrorHandlingPolicy, new()
     {
         private IMediaFormatterProvider mediaFormatterProvider;
         private IServiceProvider serviceProvider;
         private Lazy<IRequestFilter[]> requestFilters;
+        private IHttpClientFactory httpClientFactory;
 
         public ClientBase(IOptions<TOptions> options,
+            IHttpClientFactory httpClientFactory,
             IMediaFormatterProvider mediaFormatterProvider,
             IServiceProvider serviceProvider)
         {
             this.Options = options.Value;
             this.mediaFormatterProvider = mediaFormatterProvider;
             this.serviceProvider = serviceProvider;
+            this.httpClientFactory = httpClientFactory;
             this.requestFilters = new Lazy<IRequestFilter[]>(() =>
-                this.Options.RequestFilters.Select(x=> ActivatorUtilities.CreateInstance(this.serviceProvider, x.Type, x.Arguments)).Cast<IRequestFilter>().ToArray()
+                this.Options.RequestFilters.Select(x => ActivatorUtilities.CreateInstance(this.serviceProvider, x.Type, x.Arguments)).Cast<IRequestFilter>().ToArray()
             );
+        }
+
+        protected HttpClient GetClient()
+        {
+            return this.httpClientFactory.CreateClient();
         }
 
         protected TOptions Options { get; private set; }
 
         protected Task<TTarget> TransformResponseAsync<TTarget>(HttpResponseMessage message)
         {
-            IMediaFormatter mediaFormatter = this.mediaFormatterProvider.GetMediaFormatter(message.Content.Headers.ContentType);
-            if (mediaFormatter == null)
+            if (message.Content != null && message.Content.Headers.ContentLength > 0)
             {
-                throw new UnsupportedMediaTypeApiException(message.Content.Headers.ContentType);
+                IMediaFormatter mediaFormatter = this.mediaFormatterProvider.GetMediaFormatter(message.Content.Headers.ContentType);
+                if (mediaFormatter == null)
+                {
+                    throw new UnsupportedMediaTypeApiException(message);
+                }
+                return mediaFormatter.TransformAsync<TTarget>(message.Content);
             }
-            return mediaFormatter.TransformAsync<TTarget>(message.Content);
+            else
+            {
+                return Task.FromResult(default(TTarget));
+            }
         }
 
         protected HttpRequestMessage ApplyFilters(HttpRequestMessage requestMessage, params string[] securityDefinitions)
@@ -52,14 +67,99 @@
             return finalMessage;
         }
 
-        protected HttpContent TransformRequestBody(object data, string mediaType)
+        protected HttpContent TransformRequestBody(object body, IDictionary<string, IFormData> formData, string mediaType)
         {
             IMediaFormatter mediaFormatter = this.mediaFormatterProvider.GetMediaFormatter(mediaType);
             if (mediaFormatter == null)
             {
                 throw new UnsupportedMediaTypeApiException(mediaType);
             }
-            return mediaFormatter.Format(data);
+            return mediaFormatter.Format(body, formData);
+        }
+
+        protected ApiException MapToException(HttpResponseMessage message)
+        {
+            switch (message.StatusCode)
+            {
+                case HttpStatusCode.BadRequest:
+                    return new BadRequestApiException(message);
+                case HttpStatusCode.Unauthorized:
+                    return new UnauthorizedApiException(message);
+                case HttpStatusCode.Forbidden:
+                    return new ForbiddenApiException(message);
+                case HttpStatusCode.NotFound:
+                    return new NotFoundApiException(message);
+                case HttpStatusCode.Conflict:
+                    return new ConflictApiException(message);
+                case HttpStatusCode.InternalServerError:
+                    return new InternalServerErrorApiException(message);
+                case HttpStatusCode.ServiceUnavailable:
+                    return new ServiceUnavailableApiException(message);
+                default:
+                    return new UnhandledApiException(message);
+            }
+        }
+
+        protected async Task<ApiException> MapToException<TTarget>(HttpResponseMessage message)
+        {
+            if (message.Content == null)
+            {
+                return this.MapToException(message);
+            }
+            else
+            {
+                var result = await this.TransformResponseAsync<TTarget>(message);
+
+                switch (message.StatusCode)
+                {
+                    case HttpStatusCode.BadRequest:
+                        return new BadRequestApiException<TTarget>(message, result);
+                    case HttpStatusCode.Unauthorized:
+                        return new UnauthorizedApiException<TTarget>(message, result);
+                    case HttpStatusCode.Forbidden:
+                        return new ForbiddenApiException<TTarget>(message, result);
+                    case HttpStatusCode.NotFound:
+                        return new NotFoundApiException<TTarget>(message, result);
+                    case HttpStatusCode.Conflict:
+                        return new ConflictApiException<TTarget>(message, result);
+                    case HttpStatusCode.InternalServerError:
+                        return new ConflictApiException<TTarget>(message, result);
+                    case HttpStatusCode.ServiceUnavailable:
+                        return new ServiceUnavailableApiException<TTarget>(message, result);
+                    default:
+                        return new UnhandledApiException<TTarget>(message, result);
+                }
+            }
+        }
+
+        protected bool MatchStatus(HttpResponseMessage message, int status)
+        {
+            return status == (int)message.StatusCode;
+        }
+
+        protected bool MatchStatus(HttpResponseMessage message, string status)
+        {
+            return message.StatusCode.ToString().Equals(status, StringComparison.OrdinalIgnoreCase)
+                || message.ReasonPhrase == status;
+        }
+
+        protected IFormData GetFormData(object data)
+        {
+            var formData = data as IFormData;
+            if (formData != null)
+            {
+                return formData;
+            }
+            return new FormData(data);
+        }
+
+        protected string SafeToString(object value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+            return value.ToString();
         }
 
         /// <summary>

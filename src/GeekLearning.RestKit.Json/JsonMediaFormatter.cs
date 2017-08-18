@@ -17,15 +17,21 @@ namespace GeekLearning.RestKit.Json
         {
         }
 
-        public HttpContent Format(object data)
+        public HttpContent Format(object body, IDictionary<string, IFormData> formData)
         {
-            return new StringContent(JsonConvert.SerializeObject(data), System.Text.Encoding.UTF8, JsonMediaType);
+            return new StringContent(JsonConvert.SerializeObject(body), System.Text.Encoding.UTF8, JsonMediaType);
         }
 
-        public bool Supports(string contentType)
+        public bool Supports(ParsedMediaType mediaType)
         {
-            return contentType.Equals(JsonMediaType, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(mediaType.Type, "application", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(mediaType.StructuredType, "json", StringComparison.OrdinalIgnoreCase);
         }
+
+        //public bool Supports(string contentType)
+        //{
+        //    return contentType.Equals(JsonMediaType, StringComparison.OrdinalIgnoreCase);
+        //}
 
         public async Task<TTarget> TransformAsync<TTarget>(HttpContent content)
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeekLearning.RestKit.Core.Internal
 {
-    public class MediaFormatterProvider: IMediaFormatterProvider
+    public class MediaFormatterProvider : IMediaFormatterProvider
     {
         private IEnumerable<IMediaFormatter> mediaFormatters;
 
@@ -17,12 +17,17 @@ namespace GeekLearning.RestKit.Core.Internal
 
         public IMediaFormatter GetMediaFormatter(MediaTypeHeaderValue contentType)
         {
-            return GetMediaFormatter(contentType.MediaType);
+            return GetMediaFormatter(new ParsedMediaType(contentType.MediaType));
         }
 
-        public IMediaFormatter GetMediaFormatter(string contentType)
+        public IMediaFormatter GetMediaFormatter(string mediaType)
         {
-            return mediaFormatters.First(f=> f.Supports(contentType));
+            return GetMediaFormatter(new ParsedMediaType(mediaType));
+        }
+
+        public IMediaFormatter GetMediaFormatter(ParsedMediaType mediaType)
+        {
+            return mediaFormatters.FirstOrDefault(f => f.Supports(mediaType));
         }
     }
 }

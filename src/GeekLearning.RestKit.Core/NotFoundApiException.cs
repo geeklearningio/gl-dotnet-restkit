@@ -1,15 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GeekLearning.RestKit.Core
+﻿namespace GeekLearning.RestKit.Core
 {
-    public class NotFoundApiException: ApiException
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+
+
+    public class NotFoundApiException : ApiException
     {
+        public NotFoundApiException()
+        {
+        }
+
+        public NotFoundApiException(HttpResponseMessage message) : base(message)
+        {
+        }
     }
 
-    public class NotFoundApiException<TResponse> : ApiException<TResponse>
+    public class NotFoundApiException<TResponse> : NotFoundApiException, IApiException<TResponse>
     {
+        public NotFoundApiException(HttpResponseMessage message, TResponse response) : base(message)
+        {
+            this.Response = response;
+        }
+
+        public TResponse Response { get; }
     }
 }

@@ -1,15 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GeekLearning.RestKit.Core
+﻿namespace GeekLearning.RestKit.Core
 {
-    public class UnauthorizedApiException: ApiException
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+
+
+    public class UnauthorizedApiException : ApiException
     {
+        public UnauthorizedApiException()
+        {
+        }
+
+        public UnauthorizedApiException(HttpResponseMessage message) : base(message)
+        {
+        }
     }
 
-    public class UnauthorizedApiException<TResponse> : ApiException<TResponse>
+    public class UnauthorizedApiException<TResponse> : UnauthorizedApiException, IApiException<TResponse>
     {
+        public UnauthorizedApiException(HttpResponseMessage message, TResponse response) : base(message)
+        {
+            this.Response = response;
+        }
+
+        public TResponse Response { get; }
     }
 }
