@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekLearning.RestKit.Core", "src\GeekLearning.RestKit.Core\GeekLearning.RestKit.Core.csproj", "{DB5207D5-3F54-45F1-B7FC-C266F55C33A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekLearning.RestKit.Core", "src\GeekLearning.RestKit.Core\GeekLearning.RestKit.Core.csproj", "{DB5207D5-3F54-45F1-B7FC-C266F55C33A4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekLearning.RestKit.Json", "src\GeekLearning.RestKit.Json\GeekLearning.RestKit.Json.csproj", "{9C387D89-0D16-4279-8B94-37D60DAA7FF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekLearning.RestKit.Json", "src\GeekLearning.RestKit.Json\GeekLearning.RestKit.Json.csproj", "{9C387D89-0D16-4279-8B94-37D60DAA7FF5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekLearning.Http.Logging", "src\GeekLearning.Http.Logging\GeekLearning.Http.Logging.csproj", "{380EE612-647B-4CDD-B491-B9B4AE7E1479}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekLearning.Http.Logging", "src\GeekLearning.Http.Logging\GeekLearning.Http.Logging.csproj", "{380EE612-647B-4CDD-B491-B9B4AE7E1479}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekLearning.RestKit.FormData", "src\GeekLearning.RestKit.FormData\GeekLearning.RestKit.FormData.csproj", "{0A64C2AC-3813-46DA-8039-1C79E1950C2A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekLearning.RestKit.FormData", "src\GeekLearning.RestKit.FormData\GeekLearning.RestKit.FormData.csproj", "{0A64C2AC-3813-46DA-8039-1C79E1950C2A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekLearning.RestKit.Tests", "tests\GeekLearning.RestKit.Tests\GeekLearning.RestKit.Tests.csproj", "{2CFD4C43-C052-42E0-835C-FEA669C4EE91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekLearning.RestKit.Tests", "tests\GeekLearning.RestKit.Tests\GeekLearning.RestKit.Tests.csproj", "{2CFD4C43-C052-42E0-835C-FEA669C4EE91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekLearning.Http", "src\GeekLearning.Http\GeekLearning.Http.csproj", "{CBECEBF4-EB4F-4478-B98A-08B5E1E1A47D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{2CFD4C43-C052-42E0-835C-FEA669C4EE91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CFD4C43-C052-42E0-835C-FEA669C4EE91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CFD4C43-C052-42E0-835C-FEA669C4EE91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBECEBF4-EB4F-4478-B98A-08B5E1E1A47D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBECEBF4-EB4F-4478-B98A-08B5E1E1A47D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBECEBF4-EB4F-4478-B98A-08B5E1E1A47D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBECEBF4-EB4F-4478-B98A-08B5E1E1A47D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
