@@ -4,6 +4,7 @@ namespace GeekLearning.RestKit.Json
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -28,15 +29,14 @@ namespace GeekLearning.RestKit.Json
                 && string.Equals(mediaType.StructuredType, "json", StringComparison.OrdinalIgnoreCase);
         }
 
-        //public bool Supports(string contentType)
-        //{
-        //    return contentType.Equals(JsonMediaType, StringComparison.OrdinalIgnoreCase);
-        //}
-
         public async Task<TTarget> TransformAsync<TTarget>(HttpContent content)
         {
-            var stringContent = await content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<TTarget>(stringContent);
+            using (var streamReader = new StreamReader(await content.ReadAsStreamAsync()))
+            using (var jsonReader = new JsonTextReader(streamReader))
+            {
+                var serializer = new JsonSerializer();
+                return serializer.Deserialize<TTarget>(jsonReader);
+            }
         }
     }
 }
