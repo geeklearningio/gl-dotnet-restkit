@@ -38,6 +38,7 @@ namespace GeekLearning.Http.Logging
             var response = await base.SendAsync(request, cancellationToken);
             await response.Content.LoadIntoBufferAsync();
             requestLog.ResponseBody = await response.Content.ReadAsStringAsync();
+            requestLog.ResponseHeaders = response.Headers;
 
             this.sink.Post(requestLog);
             return response;
