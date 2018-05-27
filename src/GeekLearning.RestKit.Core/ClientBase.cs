@@ -9,6 +9,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using System.Globalization;
 
     public abstract class ClientBase<TOptions>
        where TOptions : class, IProvideRequestFilters, IProvideErrorHandlingPolicy, new()
@@ -194,7 +195,7 @@
                 sb.Append(hasQuery ? '&' : '?');
                 sb.Append(WebUtility.UrlEncode(parameter.Key));
                 sb.Append('=');
-                sb.Append(WebUtility.UrlEncode(parameter.Value.ToString()));
+                sb.Append(WebUtility.UrlEncode(Convert.ToString(parameter.Value, CultureInfo.InvariantCulture)));
                 hasQuery = true;
             }
 
