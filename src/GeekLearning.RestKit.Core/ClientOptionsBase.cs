@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Polly;
 
-    public abstract class ClientOptionsBase : IProvideRequestFilters, IProvideErrorHandlingPolicy
+    public abstract class ClientOptionsBase : IProvideRequestFilters, IProvideErrorHandlingPolicy, IProvideHttpClientConfigurationName
     {
         private List<InjectionDescriptor> requestfilters = new List<InjectionDescriptor>();
 
@@ -28,5 +28,7 @@
         }
 
         public Policy Policy { get; set; }
+
+        public string HttpClientConfigurationName { get; set; }
     }
 }

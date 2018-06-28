@@ -12,7 +12,7 @@
     using System.Globalization;
 
     public abstract class ClientBase<TOptions>
-       where TOptions : class, IProvideRequestFilters, IProvideErrorHandlingPolicy, new()
+       where TOptions : class, IProvideHttpClientConfigurationName, IProvideRequestFilters, IProvideErrorHandlingPolicy, new()
     {
         private IMediaFormatterProvider mediaFormatterProvider;
         private IServiceProvider serviceProvider;
@@ -35,7 +35,14 @@
 
         protected HttpClient GetClient()
         {
-            return this.httpClientFactory.CreateClient();
+            if (string.IsNullOrEmpty(Options.HttpClientConfigurationName))
+            {
+                return this.httpClientFactory.CreateClient();
+            }
+            else
+            {
+                return this.httpClientFactory.CreateClient(Options.HttpClientConfigurationName);
+            }
         }
 
         protected TOptions Options { get; private set; }
