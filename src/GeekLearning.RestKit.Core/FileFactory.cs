@@ -8,19 +8,19 @@ namespace GeekLearning.RestKit.Core
 {
     public class FileFactory
     {
-        public IFile Get(byte[] data, string fileName)
+        public IFile Get(byte[] data, string fileName, string mimeType = null)
         {
-            return Get(new MemoryStream(data), fileName);
+            return Get(new MemoryStream(data), fileName, mimeType);
         }
 
-        public IFile Get(Stream stream, string fileName)
+        public IFile Get(Stream stream, string fileName, string mimeType = null)
         {
-            return new Internal.StreamFormFile(stream, fileName);
+            return new Internal.StreamFormFile(stream, fileName, mimeType);
         }
 
-        public IFile Get(FileStream stream)
+        public IFile Get(FileStream stream, string mimeType = null)
         {
-            return Get(stream, stream.Name);
+            return Get(stream, stream.Name, mimeType);
         }
     }
 }

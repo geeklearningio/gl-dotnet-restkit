@@ -9,15 +9,19 @@ namespace GeekLearning.RestKit.Core.Internal
 {
     public class StreamFormFile : IFile
     {
-        public StreamFormFile(Stream stream, string fileName)
+        public StreamFormFile(Stream stream, string fileName, string mimeType)
         {
             this.FileName = fileName;
             this.Stream = stream;
+            this.MimeType = null;
         }
 
         public object Data => this.Stream;
 
+        public string MimeType { get; }
+
         public string FileName { get; }
+
         public Stream Stream { get; }
 
         public HttpContent CreateContent()

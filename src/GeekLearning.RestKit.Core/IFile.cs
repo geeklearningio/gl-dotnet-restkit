@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace GeekLearning.RestKit.Core
 {
-    public interface IFile: IFormData
+    public interface IFile : IFormData
     {
+        string MimeType { get; }
+
         string FileName { get; }
+
         HttpContent CreateContent();
     }
 }

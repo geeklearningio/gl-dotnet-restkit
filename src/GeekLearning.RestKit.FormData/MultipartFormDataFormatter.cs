@@ -23,12 +23,13 @@
 
                 if (file != null)
                 {
+                    var contentType = !string.IsNullOrEmpty(file.MimeType) ? file.MimeType : MimeTypes.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(file.FileName));
                     var content = file.CreateContent();
                     content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data");
                     content.Headers.ContentDisposition.Name = item.Key;
                     content.Headers.ContentDisposition.FileName = file.FileName;
                     content.Headers.ContentDisposition.FileNameStar = file.FileName;
-                    content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+                    content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
                     containerContent.Add(content);
                 }
                 else
