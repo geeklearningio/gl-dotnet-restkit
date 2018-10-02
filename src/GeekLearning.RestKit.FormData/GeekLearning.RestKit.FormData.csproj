@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediaTypeMap" Version="2.1.0" />
+    <PackageReference Include="MediaTypeMap.Core" Version="2.3.3" />
   </ItemGroup>
 
 </Project>
