@@ -131,7 +131,7 @@
                     case HttpStatusCode.Conflict:
                         return new ConflictApiException<TTarget>(message, result);
                     case HttpStatusCode.InternalServerError:
-                        return new ConflictApiException<TTarget>(message, result);
+                        return new InternalServerErrorApiException<TTarget>(message, result);
                     case HttpStatusCode.ServiceUnavailable:
                         return new ServiceUnavailableApiException<TTarget>(message, result);
                     default:
